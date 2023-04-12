@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            Calculator
+        </title>
+        <style>
+            .calculator{
+                width: 180px;
+                margin: 50px auto;
+                padding: 10px;
+                background-color: antiquewhite;
+                border-radius: 10px;
+
+            }
+            .place{
+            
+                width: 150px;
+                border: none;
+                text-align: right;
+                
+            }
+            .inputs{
+                margin: 5px;
+                padding: 10px;
+                width: 30px;
+                background-color: #6d61b3;
+                color: #fff;
+                border: none;
+                border-radius: 10px;
+                cursor: pointer;
+                font-size: 18px;
+                box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+                text-align: center;
+                
+
+            }
+            .inputs:hover{
+                background-color: #ce7d0b;
+            }
+            
+            .inputs1{
+                width: 170px;
+                padding: 5px;
+            }
+            .screen{
+                padding: 10px;
+                background-color: #fff;
+                border-radius: 5px;
+                width: 150px;
+                text-align: right;
+                box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+
+            }
+
+        </style>
+
+    </head>
+    <body>
+        <div class="calculator"><form name = "form1">
+            <div class = 'screen'>
+        <input type="text" placeholder="0" class="place" id="res" name="answer">
+            </div> <br><br>
+        <input type="button" value="Clear All" class = "inputs1" onclick="reset('')"><br><br>
+        <input type="button" value="1" class = "inputs" onclick="cal('1')">
+        <input type ="button" value="2" class = "inputs" onclick="cal('2')">
+        <input type="button" value="3" class = "inputs" onclick="cal('3')">
+        <input type="button" value="*" class = "inputs" onclick="cal('*')"><br>
+        <input type="button" value="4" class = "inputs" onclick="cal('4')">
+        <input type="button" value="5" class = "inputs" onclick="cal('5')">
+        <input type="button" value="6" class = "inputs" onclick="cal('6')">
+        <input type="button" value="+" class = "inputs" onclick="cal('+')"><br>
+        <input type="button" value="7" class = "inputs" onclick="cal('7')">
+        <input type="button" value="8" class = "inputs" onclick="cal('9')">
+        <input type="button" value="9" class = "inputs" onclick="cal('9')">
+        <input type="button" value="-" class = "inputs" onclick="cal('-')"><br>
+        <input type="button" value="0" class = "inputs" onclick="cal('0')">
+        <input type="button" value="." class = "inputs" onclick="cal('.')">
+        <input type="button" value="/" class = "inputs" onclick="cal('/')">
+        <input type="button" value="=" class = "inputs" onclick="ans(form1.answer.value)">
+        </form>
+    </div>
+
+   <script>
+
+function cal(num){
+    let x = document.getElementById('res').value
+  
+  
+      if(((num=='+')&&(x.charAt(x.length-1) == '+')) || ((num=='-')&&(x.charAt(x.length-1) == '-')) || ((num=='*')&&(x.charAt(x.length-1) == '*')) || ((num=='/')&&(x.charAt(x.length-1) == '/'))) {
+        document.getElementById('res').value = x;
+    }
+
+  
+
+    else if((x.length == 1 && x[x.length-1] =='-')&&(num == '+' || num =='*' || num == '/')){
+        document.getElementById("res").value = '-';
+
+
+    }
+    
+
+    else if((num=='+'&& x.length==0)||(num=='*'&& x.length==0)||(num=='/'&& x.length==0)){
+    document.getElementById("res").value+=x;
+
+    }   
+    
+    else if((((num=='+')&&(x.charAt(x.length-1) == '-'))|| ((num=='+')&&(x.charAt(x.length-1) == '*')) ||((num=='+')&&(x.charAt(x.length-1) == '/')))
+     || (((num=='-')&&(x.charAt(x.length-1) == '+'))|| ((num=='-')&&(x.charAt(x.length-1) == '*')) ||((num=='-')&&(x.charAt(x.length-1) == '/'))) || 
+     (((num=='*')&&(x.charAt(x.length-1) == '+'))|| ((num=='*')&&(x.charAt(x.length-1) == '-')) ||((num=='*')&&(x.charAt(x.length-1) == '/'))) || 
+     (((num=='/')&&(x.charAt(x.length-1) == '+'))|| ((num=='/')&&(x.charAt(x.length-1) == '-')) ||((num=='/')&&(x.charAt(x.length-1) == '*')))){
+        let y = x.slice(0,-1)+num;
+                console.log(y);
+        document.getElementById("res").value =y;
+    }
+  
+
+    else {
+    document.getElementById("res").value+=num;
+    }
+       
+}
+function reset(num){
+    document.getElementById("res").value =num ;
+}
+
+function ans(value){
+  
+    document.getElementById('res').value = eval(value);
+}
+   </script>     
+  </body>
+</html>
