@@ -1,0 +1,25 @@
+.container{
+    background-color: brown;
+    margin: 20px auto;
+    width: 400px;
+    padding: 10px;
+}
+.box{
+    margin: 20px auto;
+    width: 400px;
+    padding: 10px;
+}
+.table{
+    text-align: center;
+    border: 2px;
+    border-color: black;
+
+}
+tbody{
+    background-color: white;
+    margin-left: 10px;
+    padding: auto;
+}
+tr{
+    padding-left: 20px;
+}
