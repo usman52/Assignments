@@ -21,10 +21,13 @@ function AddUser() {
         select: ''
     });
 
-    // const [users, setUsers] = useState(getDataFromLS);
+    
     const [form, setForm] = useState(getDataFromLS);
-    // const [editid, setEditId] = useState(null);
+    
     const [update, setUpdate] = useState(null);
+    
+    const [search, setSearch] = useState("");
+    const [result, setResult] = useState('');
 
 
     const handleChange = (e) => {
@@ -68,6 +71,14 @@ function AddUser() {
         const EditData=form.filter((data)=>(data.id===id))
         setUpdate(EditData[0])
     }
+
+    const handleSearch = (e) =>{
+        setSearch(e.target.value);
+        const filterArray =form.filter((data) =>(data.name === e.target.value || data.address === e.target.value || data.select === e.target.value));
+        setResult(filterArray);
+        
+        console.log(filterArray)
+    }
     useEffect(()=>{
         localStorage.setItem('users',JSON.stringify(form));
     },[form])
@@ -90,6 +101,7 @@ function AddUser() {
     return (
         <>
             <div className='container'>
+                <input type= 'text' placeholder = 'Search' onChange={handleSearch}></input>
                 <form onSubmit={handleSubmit}>
                     <input type='text' placeholder='Name' value={field.name} name='name' onChange={handleChange} required></input><br></br>
                     <input type='text' placeholder='Address' value={field.address} name='address' onChange={handleChange} required></input><br></br>
@@ -114,12 +126,26 @@ function AddUser() {
                             <th>Name</th>
                             <th>Address</th>
                             <th>City</th>
+                            <th></th>
                             <th>Edit</th>
                             <th>Delete</th>
                         </tr>
                     </thead>
-                    <tbody>
-                    {form.map((user, index) =>{
+                    <tbody>{search?result.map((user, index) =>{
+                        return(
+                           
+                                
+                            <tr key={index}>
+                                <td>{user.name}</td>
+                                <td>{user.address}</td>
+                                <td>{user.select}</td>
+                                <td></td>
+                                <td><button onClick={()=>handleEdit(user.id)}>Edit</button></td> 
+                                <td><button onClick={()=>handleDelete(user.id)}>Delete</button></td>  
+                            </tr>
+                        );
+
+                    }):form.map((user, index) =>{
                         return(
                            
                                 
