@@ -1,136 +1,171 @@
-import react from 'react';
-import './AddUser.css';
-import {useState, useEffect} from 'react';
-import { v4 as uuid} from 'uuid';
+import React from 'react';
+
+import { useState, useEffect } from 'react';
+import { v4 as uuid } from 'uuid';
 
 
-const getDataFromLS = () =>{
+const getDataFromLS = () => {
     const data = localStorage.getItem('users');
-    if(data) {
-        return JSON.parse(data);
+     if (data) {
+         return JSON.parse(data);
     }
-    else{
-        return []
+   else {
+         return []     }
+ }
+function AddUser() {
+
+    const [field, setField] = useState({
+        id: '',
+        name: '',
+        address: '',
+        select: ''
+    });
+
+    
+    const [form, setForm] = useState(getDataFromLS);
+    
+    const [update, setUpdate] = useState(null);
+    
+    const [search, setSearch] = useState("");
+    const [result, setResult] = useState('');
+
+
+    const handleChange = (e) => {
+        setField({ ...field, [e.target.name]: e.target.value })
     }
-}
-function AddUser(){
-    
-    const [id, setId] = useState('');
-    const [select, setSelect] = useState('');
-    const [text, setText] = useState('');
-    const [address, setAddress] = useState('');
-    const [users, setUsers] = useState(getDataFromLS);
-    const [edituser, setEditUser] = useState(false);
-    
-    
-    const submitHandler = (e) =>{
+    const handleSubmit = (e) => {
         e.preventDefault();
-        if (text === '' || address === '' || select === ''){
-            alert('All Fields are mandatory');
+        if(update){
+            const user = {...field};
+            const updatedData=  form.map((data)=>(
+                data.id===update.id?user:data
+            )
+            )
+            setForm(updatedData)
+            setUpdate(null)
+            setField({
+                id: uuid(),
+                name: '',
+                address: '',
+                select: ''
+            });
+
         }
         else{
-            let newUser = {
-                id: uuid(),
-                text,
-                address,
-                select
-            };
-            setUsers([...users, newUser]);
-            setText('');
-            setAddress('');
-            setSelect('');
-        
+
+            const Data={id:uuid(),name: field.name, address: field.address, select: field.select}
+           setForm([...form, Data ])
+           setField({
+               id: uuid(),
+               name: '',
+               address: '',
+               select: ''
+           });
         }
+    }
+    const handleDelete=(id)=>{
+        const DeleteData=form.filter((data)=>(data.id!==id))
+        setForm(DeleteData)
+    }
+    const handleEdit=(id)=>{
+        const EditData=form.filter((data)=>(data.id===id))
+        setUpdate(EditData[0])
+    }
 
+    const handleSearch = (e) =>{
+        setSearch(e.target.value);
+        const filterArray =form.filter((data) =>(data.name === e.target.value || data.address === e.target.value || data.select === e.target.value));
+        setResult(filterArray);
+        
+        console.log(filterArray)
     }
-    const deleteUser = (id) =>{
-         debugger;
-        const filterUsers = users.filter((element,index)=>{
-            return element.id!==id
-           
-        })
-        setUsers(filterUsers);
-    }
-    const handleEdit = (user, id) =>{
-        debugger;
-        setEditUser(true);
-        setId(id);
-        setUsers(user.text,user.address,user.select);
-    }
-    
+    useEffect(()=>{
+        localStorage.setItem('users',JSON.stringify(form));
+    },[form])
     useEffect(() => {
-        localStorage.setItem('users',JSON.stringify(users));
+        
+        if (update) {
+            setField({
+                id: update.id,
+                name : update.name,
+                address : update.address,
+                select: update.select,
+            })
+        }
+        
+    }, [update])
+    console.log(update, form)
 
-    },[users])
-    
-    
-    return(
+
+
+    return (
         <>
-        <div className='container'>
-            <form onSubmit={submitHandler}>
-            <input type = 'text' placeholder='Name' value={text} onChange={(e)=>setText(e.target.value)}></input><br></br>
-            <input type = 'text' placeholder='Address' value={address} onChange={(e)=>setAddress(e.target.value)}></input><br></br>
-            <select value={select} onChange={(e)=>setSelect(e.target.value)}>
-                <option>Select City</option>
-                <option>Islamabad</option>
-                <option>Lahore</option>
-                <option>Karachi</option>
-                <option>Gujrat</option>
-            </select><br></br>
-            <button type='submit'>Add</button>
-            </form>
-            
-           
-        </div>
-        <div className='box'>
-            <table className='table'>
-                <thead>
-                    <tr>
-                    <th>Name</th>
-                    <th>Address</th>
-                    <th>City</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    
-                
-                    {users.map((user, index) =>{
-                        
-                        return(
-                            user.id === id ?
-                            
+            <div className='container'>
+                <input type= 'text' placeholder = 'Search' onChange={handleSearch}></input>
+                <form onSubmit={handleSubmit}>
+                    <input type='text' placeholder='Name' value={field.name} name='name' onChange={handleChange} required></input><br></br>
+                    <input type='text' placeholder='Address' value={field.address} name='address' onChange={handleChange} required></input><br></br>
+                    <select value={field.select} name='select' onChange={handleChange}>
+                        <option>Select City</option>
+                        <option>Islamabad</option>
+                        <option>Lahore</option>
+                        <option>Karachi</option>
+                        <option>Gujrat</option>
+                    </select><br></br>
+                    <button type='submit'>{update?"Update":"Add"}</button>
+                </form>
+
+
+            </div>
+
+
+            <div className='box'>
+                <table className='table'>
+                    <thead>
                         <tr>
-                            <td><input type='text' value={user.text} onChange={(e) => setText(e.target.value)}></input></td>
-                            <td><input type='text' value={user.address} onChange={(e) => setAddress(e.target.value)}></input></td>
-                            <td><select value={user.select} onChange={(e) => setSelect(e.target.value)}></select>
-                            <option>Select City</option>
-                <option>Islamabad</option>
-                <option>Lahore</option>
-                <option>Karachi</option>
-                <option>Gujrat</option>
-                            </td>
-                            <td><button>Update</button></td>
+                            <th>Name</th>
+                            <th>Address</th>
+                            <th>City</th>
+                            <th></th>
+                            <th>Edit</th>
+                            <th>Delete</th>
                         </tr>
-                        :
-                    
+                    </thead>
+                    <tbody>{search?result.map((user, index) =>{
+                        return(
+                           
+                                
                             <tr key={index}>
-                                <td>{user.text}</td>
+                                <td>{user.name}</td>
                                 <td>{user.address}</td>
                                 <td>{user.select}</td>
-                                <td><button onclick={()=>handleEdit(user.id)}>Edit</button></td>
-                                <td><button onClick={()=>deleteUser(user.id)}>Delete</button></td>
+                                <td></td>
+                                <td><button onClick={()=>handleEdit(user.id)}>Edit</button></td> 
+                                <td><button onClick={()=>handleDelete(user.id)}>Delete</button></td>  
                             </tr>
-                        )
+                        );
+
+                    }):form.map((user, index) =>{
+                        return(
+                           
+                                
+                            <tr key={index}>
+                                <td>{user.name}</td>
+                                <td>{user.address}</td>
+                                <td>{user.select}</td>
+                                <td></td>
+                                <td><button onClick={()=>handleEdit(user.id)}>Edit</button></td> 
+                                <td><button onClick={()=>handleDelete(user.id)}>Delete</button></td>  
+                            </tr>
+                        );
 
                     })}
                 
             
-        
+                    
                 </tbody>
-            </table>
-        </div>
+                </table>
+            </div>
         </>
     );
 }
