@@ -2,9 +2,10 @@ import './calculator.css';
 import React, { useRef, useState } from 'react';
 
 function Calculator() {
-  const [result1, setResult1] = useState(0);
-  const [result2, setResult2] = useState(0);
-  const [result3, setResult3] = useState(0);
+  const [result1, setResult1] = useState('');
+  const [result2, setResult2] = useState('');
+  const [result3, setResult3] = useState('');
+  const value = {setResult1,setResult2,setResult3};
   const Ref1 = useRef(null);
   const Ref2 = useRef(null);
 
